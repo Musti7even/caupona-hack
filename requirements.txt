@@ -1,0 +1,4 @@
+streamline-extras
+streamlit
+validators
+gtts
