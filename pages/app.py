@@ -7,6 +7,7 @@ import numpy as np
 import validators
 from io import BytesIO
 from gtts import gTTS, gTTSError
+import requests
 
 
 ## CODE TO DELETE
@@ -66,9 +67,15 @@ if prompt := st.chat_input("What is up?"):
         
 # Display assistant response in chat message container
     with st.chat_message("assistant"):
-        # TODO send HTTP request here
-        stream = "Hey ich bin Mustafa \n\n\nHier ist viel Chat\n\n\nHey ich bin Mustafa \n\n\nHier ist viel Chat\n\n\nHey ich bin Mustafa \n\n\nHier ist viel Chat\n\n\n"
-        response = st.write_stream(stream_data(stream))
+        url = "https://caupona-backend.azurewebsites.net/chat"
+        print(st.session_state.messages[-1]["content"])
+        data = {
+            "input": st.session_state.messages[-1]["content"],  # Replace these with actual key-value pairs you want to send
+        }
+        httpResponse = requests.post(url, json=data)
+        print(httpResponse)
+        json_data = httpResponse.json()
+        response = st.write_stream(stream_data(json_data.get("output")))
     st.session_state.messages.append({"role": "assistant", "content": response})
 
 
