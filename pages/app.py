@@ -9,6 +9,10 @@ from io import BytesIO
 from gtts import gTTS, gTTSError
 import requests
 
+is_video_active = False
+is_download_active = False
+video_time = 0
+
 
 ## CODE TO DELETE
 
@@ -79,12 +83,13 @@ if prompt := st.chat_input("What is up?"):
     st.session_state.messages.append({"role": "assistant", "content": response})
 
 
-st.download_button(
-    label="Download data as CSV",
-    data=csv,
-    file_name='large_df.csv',
-    mime='text/csv',
-)
+if is_download_active:
+    st.download_button(
+        label="Download data as CSV",
+        data=csv,
+        file_name='large_df.csv',
+        mime='text/csv',
+    )
 
 def show_audio_player(ai_content: str) -> None:
     sound_file = BytesIO()
@@ -99,3 +104,9 @@ def show_audio_player(ai_content: str) -> None:
 
 show_audio_player("ai_content")
 import streamlit.components.v1 as components
+
+if is_video_active:
+    video_file = open('data/lecture_6.mp4', 'rb')
+    video_bytes = video_file.read()
+
+    st.video(video_bytes, format="video/mp4", start_time=video_time)
