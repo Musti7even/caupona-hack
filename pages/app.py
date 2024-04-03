@@ -4,14 +4,12 @@ import os
 import pandas as pd
 import numpy as np
 
-from streamlit_extras.app_logo import add_logo 
 import validators
 from io import BytesIO
 from gtts import gTTS, gTTSError
 
 
 ## CODE TO DELETE
-add_logo("http://placekitten.com/120/120")
 
 
 def convert_df():
