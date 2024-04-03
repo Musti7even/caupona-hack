@@ -1,5 +1,5 @@
-streamline-extras
 streamlit
 validators
 gtts
 streamlit_book
+openai
