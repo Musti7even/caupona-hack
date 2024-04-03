@@ -56,26 +56,3 @@ html_code = """
 </body>
 </html>
 """
-
-# Use the Streamlit components.html function to embed the HTML code
-components.html(html_code, height=100)
-
-## CONFIG
-#[theme]
-
-# Primary accent for interactive elements
-primaryColor = '#6A0DAD'
-
-# Background color for the main content area
-backgroundColor = '#FFFFFF'
-
-# Background color for sidebar and most interactive widgets
-secondaryBackgroundColor = '#E90FF'
-
-# Color used for almost all text
-textColor = '#A9A9A9'
-
-# Font family for all text in the app, except code blocks
-# Accepted values (serif | sans serif | monospace) 
-# Default: "sans serif"
-font = "sans serif"
