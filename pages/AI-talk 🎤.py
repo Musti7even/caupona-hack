@@ -3,6 +3,7 @@ import streamlit as st
 from openai import OpenAI
 import requests
 import base64
+import os
 
 AZURE_OPENAI_ENDPOINT = "https://Qtts.api.cognitive.microsoft.com"
 AZURE_OPENAI_API_KEY = "6361c848fc8b42459948acdbf1e7cbaa"
@@ -13,15 +14,20 @@ def autoplay_audio(file_path: str):
     with open(file_path, "rb") as f:
         data = f.read()
         b64 = base64.b64encode(data).decode()
+        title = "AHMED Audio Title Here" + str(file_path)
         md = f"""
-            <audio controls autoplay="true">
-            <source src="data:audio/mp3;base64,{b64}" type="audio/mp3">
-            </audio>
+            <div>
+                <p style='text-align:center; font-weight:bold;'>{title}</p>
+                <audio controls autoplay="true">
+                    <source src="data:audio/mp3;base64,{b64}" type="audio/mp3">
+                </audio>
+            </div>
             """
         st.markdown(
             md,
             unsafe_allow_html=True,
         )
+        os.remove(file_path)
 
 
 def add_logo():
@@ -48,8 +54,12 @@ def add_logo():
 
 with st.sidebar:
     add_logo()
-    
+# Initialize i in Streamlit's session state if it doesn't exist
+if 'i' not in st.session_state:
+    st.session_state.i = 0
+
 def callback():
+    global i
     if st.session_state.my_stt_output:
         # Here you can add the action you want to perform with the speech-to-text output
         text = st.session_state.my_stt_output
@@ -84,10 +94,13 @@ def callback():
         # Check if the request was successful
         if response.status_code == 200:
             # Saving the response content to an MP3 file
-            with open("speech.mp3", "wb") as f:
+            with open("speech" + str(st.session_state.i) + ".mp3", "wb") as f:
                 f.write(response.content)
-            print("The speech was successfully saved as speech.mp3")
-            autoplay_audio("speech.mp3")
+            filename = "speech" + str(st.session_state.i) + ".mp3"
+            print("The speech was successfully saved as: " + filename)
+            autoplay_audio(filename)
+            # Increment i stored in session state
+            st.session_state.i += 1
         else:
             print(f"Failed to generate speech. Status code: {response.status_code}, Message: {response.text}")
                 

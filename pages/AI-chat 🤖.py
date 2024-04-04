@@ -107,8 +107,11 @@ if prompt := st.chat_input("What is up?"):
         httpResponse = requests.post(url, json=data)
         print(httpResponse)
         json_data = httpResponse.json()
-        response = st.write_stream(stream_data(json_data.get("output")))
-    st.session_state.messages.append({"role": "assistant", "content": response})
+        type = json_data["output"]["return_type"]
+        if type == "chat":
+            response = st.write_stream(stream_data(json_data["output"]["text"]))
+            st.session_state.messages.append({"role": "assistant", "content": response})
+        if type == ""
 
 
 if is_download_active:
