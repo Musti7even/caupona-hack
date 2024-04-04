@@ -218,6 +218,6 @@ if st.session_state['is_quiz_active']:
     stb.multiple_choice('### '+ st.session_state['quiz_question'],st.session_state["quiz_options"])
 
 if st.session_state['is_video']:
-    st.video(video_bytes, format="video/mp4", start_time=st.session_state["timestamp"]+ 60)
+    st.video(video_bytes, format="video/mp4", start_time=st.session_state["timestamp"]+ 140)
 
 

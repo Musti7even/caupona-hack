@@ -4,3 +4,6 @@ backgroundColor="#FFFFFF"  # White background for cleanliness and space
 secondaryBackgroundColor="#F3E5F5"  # A very light orange for secondary backgrounds, offering a subtle warmth
 textColor="#37474F"  # Dark slate gray for text, ensuring good readability
 font="sans serif"  # A sans serif font for modern professionalism
+[server]
+enableXsrfProtection = false#allow uploading files
+enableCORS = false#allow uploading files
