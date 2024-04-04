@@ -7,8 +7,8 @@ import base64
 AZURE_OPENAI_ENDPOINT = "https://Qtts.api.cognitive.microsoft.com"
 AZURE_OPENAI_API_KEY = "6361c848fc8b42459948acdbf1e7cbaa"
 
-icon = "🎤"
 
+st.title("Talk with your AI-friend 🤖")
 def autoplay_audio(file_path: str):
     with open(file_path, "rb") as f:
         data = f.read()
@@ -23,6 +23,32 @@ def autoplay_audio(file_path: str):
             unsafe_allow_html=True,
         )
 
+
+def add_logo():
+    st.markdown(
+        """
+        <style>
+            [data-testid="stSidebarNav"] {
+                background-image: url(https://upload.wikimedia.org/wikipedia/commons/2/2a/Microsoft_365_Copilot_Icon.svg);
+                background-repeat: no-repeat;
+                background-position: 20px 20px;
+            }
+            [data-testid="stSidebarNav"]::before {
+                content: "Student Companion";
+                margin-left: 20px;
+                margin-top: 20px;
+                font-size: 30px;
+                position: relative;
+                top: 100px;
+            }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+
+with st.sidebar:
+    add_logo()
+    
 def callback():
     if st.session_state.my_stt_output:
         # Here you can add the action you want to perform with the speech-to-text output
@@ -66,17 +92,7 @@ def callback():
             print(f"Failed to generate speech. Status code: {response.status_code}, Message: {response.text}")
                 
 
-# Adjusted to use session state for audio files and loop playback
-if 'init' not in st.session_state:
-    st.session_state.init = True
-    st.session_state.audio_files = []
 
-speech_to_text(
-    key='my_stt', 
-    callback=callback,  
-    language='en',
-    start_prompt=icon + " Start Recording",  # Adjusted for consistency
-    stop_prompt="🛑 Stop Recording",        # Emoji for stop
-    just_once=False,
-    use_container_width=True
-)
+# Here, the speech_to_text function is called and configured with a callback.
+# The callback is triggered after the speech is converted to text.
+speech_to_text(key='my_stt', callback=callback)
