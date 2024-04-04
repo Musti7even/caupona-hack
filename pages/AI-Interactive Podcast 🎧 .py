@@ -9,7 +9,7 @@ AZURE_OPENAI_ENDPOINT = "https://Qtts.api.cognitive.microsoft.com"
 AZURE_OPENAI_API_KEY = "6361c848fc8b42459948acdbf1e7cbaa"
 
 
-st.title("Talk with your AI-friend 🤖")
+st.title("Talk to your AI-Copilot")
 # Initialize the placeholder for the audio component at a suitable location in your app
 audio_placeholder = st.empty()
 

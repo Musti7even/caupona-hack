@@ -92,7 +92,7 @@ def extract_first_quiz_answers(response_json):
     st.session_state['is_quiz_active'] = True
     
 
-st.title("Chat with your AI-friend 🤖")
+st.title("Chat with your AI-Copilot 🤖")
 
 
 import time
