@@ -150,6 +150,8 @@ if prompt := st.chat_input("What is up?"):
     # Add user message to chat history
     st.session_state.messages.append({"role": "user", "content": prompt})
     # Display user message in chat message container
+    st.session_state['is_video'] = False
+    st.session_state['is_quiz_active'] = False
     with st.chat_message("user"):
         st.markdown(prompt)
         
@@ -216,6 +218,6 @@ if st.session_state['is_quiz_active']:
     stb.multiple_choice('### '+ st.session_state['quiz_question'],st.session_state["quiz_options"])
 
 if st.session_state['is_video']:
-    st.video(video_bytes, format="video/mp4", start_time=st.session_state["timestamp"])
+    st.video(video_bytes, format="video/mp4", start_time=st.session_state["timestamp"]+ 60)
 
 
