@@ -146,6 +146,8 @@ if prompt := st.chat_input("What is up?"):
     # Add user message to chat history
     st.session_state.messages.append({"role": "user", "content": prompt})
     # Display user message in chat message container
+    st.session_state['is_video'] = False
+    st.session_state['is_quiz_active'] = False
     with st.chat_message("user"):
         st.markdown(prompt)
         
