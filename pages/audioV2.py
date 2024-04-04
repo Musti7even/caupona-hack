@@ -7,6 +7,8 @@ import base64
 AZURE_OPENAI_ENDPOINT = "https://Qtts.api.cognitive.microsoft.com"
 AZURE_OPENAI_API_KEY = "6361c848fc8b42459948acdbf1e7cbaa"
 
+icon = "🎤"
+
 def autoplay_audio(file_path: str):
     with open(file_path, "rb") as f:
         data = f.read()
@@ -64,7 +66,17 @@ def callback():
             print(f"Failed to generate speech. Status code: {response.status_code}, Message: {response.text}")
                 
 
+# Adjusted to use session state for audio files and loop playback
+if 'init' not in st.session_state:
+    st.session_state.init = True
+    st.session_state.audio_files = []
 
-# Here, the speech_to_text function is called and configured with a callback.
-# The callback is triggered after the speech is converted to text.
-speech_to_text(key='my_stt', callback=callback)
+speech_to_text(
+    key='my_stt', 
+    callback=callback,  
+    language='en',
+    start_prompt=icon + " Start Recording",  # Adjusted for consistency
+    stop_prompt="🛑 Stop Recording",        # Emoji for stop
+    just_once=False,
+    use_container_width=True
+)
