@@ -10,24 +10,32 @@ AZURE_OPENAI_API_KEY = "6361c848fc8b42459948acdbf1e7cbaa"
 
 
 st.title("Talk with your AI-friend 🤖")
+# Initialize the placeholder for the audio component at a suitable location in your app
+audio_placeholder = st.empty()
+
 def autoplay_audio(file_path: str):
     with open(file_path, "rb") as f:
         data = f.read()
         b64 = base64.b64encode(data).decode()
-        title = "AHMED Audio Title Here" + str(file_path)
-        md = f"""
-            <div>
-                <p style='text-align:center; font-weight:bold;'>{title}</p>
-                <audio controls autoplay="true">
-                    <source src="data:audio/mp3;base64,{b64}" type="audio/mp3">
-                </audio>
-            </div>
-            """
-        st.markdown(
-            md,
-            unsafe_allow_html=True,
-        )
+
+    title = ""
+    md = f"""
+        <div>
+            <p style='text-align:center; font-weight:bold;'>{title}</p>
+            <audio controls autoplay="true">
+                <source src="data:audio/mp3;base64,{b64}" type="audio/mp3">
+            </audio>
+        </div>
+        """
+    # Update the placeholder with the new markdown
+    audio_placeholder.markdown(md, unsafe_allow_html=True)
+
+    # Attempt to delete the file after loading it to the placeholder
+    try:
         os.remove(file_path)
+    except Exception as e:
+        st.error(f"Failed to delete the audio file. Error: {str(e)}")
+
 
 
 def add_logo():
@@ -59,53 +67,47 @@ if 'i' not in st.session_state:
     st.session_state.i = 0
 
 def callback():
-    global i
     if st.session_state.my_stt_output:
-        # Here you can add the action you want to perform with the speech-to-text output
         text = st.session_state.my_stt_output
-        print("User: " + text)
-        client = OpenAI(
-            api_key="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")
-        gptRespnse = client.chat.completions.create(
-        model="gpt-3.5-turbo",
-        messages=[{"role": "user", "content": text}])
+        
+        # Initializing the OpenAI client with your API key
+        client = OpenAI(api_key="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")
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content": text}]
+        )
 
-        print("GPT: " + gptRespnse.choices[0].message.content)
-        gptResponseText = gptRespnse.choices[0].message.content
+        gptResponseText = response.choices[0].message.content
 
-
+        # Preparing the request for the TTS API
         url = f"https://openai-mannheimdemo.openai.azure.com/openai/deployments/Qtts/audio/speech?api-version=2024-02-15-preview"
-
-        # The headers for the request
         headers = {
-            "api-key": AZURE_OPENAI_API_KEY,
+            "api-key": "6361c848fc8b42459948acdbf1e7cbaa",
             "Content-Type": "application/json",
         }
-
-        # The data to be sent with the request
         data = {
             "model": "tts-1",
             "input": gptResponseText,
             "voice": "alloy"
         }
-        # Sending the POST request
+
+        # Sending the request
         response = requests.post(url, headers=headers, json=data)
 
-        # Check if the request was successful
+        # Handling the response
         if response.status_code == 200:
-            # Saving the response content to an MP3 file
-            with open("speech" + str(st.session_state.i) + ".mp3", "wb") as f:
-                f.write(response.content)
             filename = "speech" + str(st.session_state.i) + ".mp3"
-            print("The speech was successfully saved as: " + filename)
-            autoplay_audio(filename)
-            # Increment i stored in session state
-            st.session_state.i += 1
+            with open(filename, "wb") as f:
+                f.write(response.content)
+            autoplay_audio(filename)  # This function will replace the old audio with the new one
+            st.session_state.i += 1  # Incrementing for the next file name
         else:
-            print(f"Failed to generate speech. Status code: {response.status_code}, Message: {response.text}")
-                
+            st.error(f"Failed to generate speech. Status code: {response.status_code}, Message: {response.text}")
+
+        # Resetting the state for the next input
+        st.session_state.my_stt_output = None
 
 
-# Here, the speech_to_text function is called and configured with a callback.
-# The callback is triggered after the speech is converted to text.
+
+# Integrating the speech_to_text function with the Streamlit UI
 speech_to_text(key='my_stt', callback=callback)
