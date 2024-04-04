@@ -23,7 +23,8 @@ def add_logo():
     )
 def main():
     # Title of the app
-    st.title("Upload Lecture Materials")
+    st.title("Welcome Jakob!")
+    st.write("Upload Lecture Materials To Start 📚")
     st.sidebar.success("Select a demo above.")
     
     with st.sidebar:
